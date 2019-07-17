@@ -46,7 +46,7 @@ namespace UNO_VS
 
             cardList = randomCardList;
         }
-        public Card draw()
+        public Card Draw()
         {
             card = cardList.ElementAt(new Random().Next(0, maxSize));
             cardList.Remove(card);

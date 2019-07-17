@@ -11,8 +11,9 @@ namespace UNO_VS
     class Field
     {
         private int numOfPlayers { get; set; }
+        LinkedList<Player> playersList = new List<Player>();
         List<Player> playersList = new List<Player>();
-        Deck deck = new Deck();
+        static Deck deck = new Deck();
         Rule rule= new Rule();
         bool isGameOver = false;
         Card card;
@@ -23,9 +24,9 @@ namespace UNO_VS
             this.numOfPlayers = numOfPlayers;
             CreatePlayers();
             Deal();
-            Testing();
-            //ShowCurrentCard();
-            //Game();
+            //Testing();
+            ShowCurrentCard();
+            Game();
             //deck.printCards();
             //deck.getSize();
         }
@@ -55,17 +56,32 @@ namespace UNO_VS
 
         private void Game()
         {
+
             foreach (var player in playersList)
             {
+
                 //DisplayField();
                 //player.DisplayHand();
-                if (rule.CanMakeValidMove(player.GetPlayerCard(), currentCard))
+                bool canPlayCard = rule.CanMakeValidMove(player.GetPlayerCard(), currentCard);
+
+                while (!canPlayCard)
                 {
-                    //DisplayField();
-                    //player.DisplayHand();
-                    //Debug.WriteLine("NO2");
+                   
+                    Card newCard = deck.Draw();
+                    player.AddCard(newCard);
+                    canPlayCard = rule.CanMakeValidMove(player.GetPlayerCard(), currentCard);
 
                 }
+                List<Card> playCardList = player.Action(currentCard);
+                currentCard = playCardList.ElementAt(playCardList.Count-1);
+                ShowCurrentCard();
+                //if (rule.CanMakeValidMove(player.GetPlayerCard(), currentCard))
+                //{
+                //    //DisplayField();
+                //    //player.DisplayHand();
+                //    //Debug.WriteLine("NO2");
+
+                //}
                 //else
                 //    Console.WriteLine("YES");
 
@@ -87,7 +103,7 @@ namespace UNO_VS
 
         private void ShowCurrentCard()
         {
-            Console.WriteLine("Color: " + currentCard.GetColor() + " " + "Value: " + currentCard.GetValue());
+            Console.WriteLine("Current Card is Color: " + currentCard.GetColor() + " " + "Value: " + currentCard.GetValue());
         }
         private void SetCurrentCard()
         {
